@@ -59,21 +59,19 @@ var app = {
 
         // videoBase64
 
-        document.getElementById('testVideo').src = videoBase64;
-        document.getElementById('objectVide').data = videoBase64;
-        document.getElementById('iframeVideo').src = videoBase64;
+        console.log(File);
+
+        var videoFilePath2 = cordova.file.externalRootDirectory + '/Pictures/Testvideo.mp4';
+        VideoPlayer.play(videoFilePath2);
 
         // window.plugins.Base64.encodeFile(videoFilePath, function (base64) {
         //     console.log('file base64 encoding: ');
         //     videoData = 'data:video/mp4;base64,' + base64.split('base64,')[1];
         //     console.log(videoData);
         //     document.getElementById('testVideo').src = videoData;
-        //     document.getElementById('objectVide').data = videoData;
-        //     document.getElementById('iframeVideo').src = videoData;
-
-        //     // document.getElementById('video').crossOrigin = 'anonymous';
-        //     // document.getElementById('objectVide').crossOrigin = 'anonymous';
-        //     // document.getElementById('iframeVideo').crossOrigin = 'anonymous';
+        //     document.getElementById('vdo-player1').style.display = 'block';
+        //     // document.getElementById('objectVide').data = videoData;
+        //     // document.getElementById('iframeVideo').src = videoData;
 
         // });
 
