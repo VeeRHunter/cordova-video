@@ -29,10 +29,9 @@ var app = {
     onDeviceReady: function () {
         this.receivedEvent('vdo-player1');
 
-        var nativeFilePath = cordova.file.externalRootDirectory + '/Pictures/ext.jpg';
-        var videoFilePath = cordova.file.externalRootDirectory + '/Pictures/movie.mp4';
-        var folderPath = cordova.file.externalRootDirectory + '/Pictures';
-        var fileName = 'movie.mp4';
+        var videoFilePath = cordova.file.externalRootDirectory + 'Pictures/movie.mp4.enc';
+        var folderPath = cordova.file.externalRootDirectory + 'Pictures';
+        var fileName = 'movie.mp4.enc';
 
         if (device.platform === 'Android') {
             var permissions = cordova.plugins.permissions;
@@ -47,49 +46,74 @@ var app = {
                 function (result) {
                     console.log(result);
 
-                    window.plugins.Base64.encodeFile(videoFilePath, function (base64) {
-                        console.log('file base64 encoding: ');
-                        videoData = 'data:video/mp4;base64,' + base64.split('base64,')[1];
-                        console.log(videoData);
+                    window.resolveLocalFileSystemURL(videoFilePath, function (fileEntry) {
+                        console.log(videoFilePath);
+                        fileEntry.file(function (file) {
+                            var reader = new FileReader();
 
-                        var x = document.createElement("VIDEO");
+                            reader.onloadend = function (e) {
+                                // console.log(this.result);
+                                // console.log(atob(this.result));
 
-                        x.id = 'testVideo';
+                                var key = 'FbcCY2yCFBwVCUE9R+6kJ4fAL4BJxxjd';
+                                var iv = 'e16ce913a20dadb8';
 
-                        if (x.canPlayType("video/mp4")) {
-                            x.setAttribute("src", videoData);
-                        } else {
-                            x.setAttribute("src", videoData);
-                        }
+                                var decrypted = CryptoJS.AES.decrypt(this.result, CryptoJS.enc.Utf8.parse(key), { iv: CryptoJS.enc.Utf8.parse(iv) });
+                                var videoData = decrypted.toString(CryptoJS.enc.Utf8);
+                                
+                                videoData = 'data:video/mp4;base64,' + videoData;
 
-                        x.setAttribute("width", "320");
-                        x.setAttribute("height", "240");
-                        x.setAttribute("controls", "controls");
-                        x.setAttribute("autoplay", "autoplay");
-                        x.setAttribute("playsinline", "playsinline");
-                        x.setAttribute("webkit-playsinline", "webkit-playsinline");
-                        document.getElementById('videoContent').appendChild(x);
+                                var x = document.createElement("VIDEO");
 
-                        x.onended = function () {
-                            alert("The video has ended.\n Video source file will be automatically deleted.");
-                            window.resolveLocalFileSystemURL(folderPath, function (dir) {
-                                dir.getFile(fileName, { create: false }, function (fileEntry) {
-                                    fileEntry.remove(function (result) {
-                                        console.log('Video file deleted');
-                                        console.log(result);
-                                        // The file has been removed succesfully
-                                    }, function (error) {
-                                        console.log(error);
-                                        console.log('Can`t delete video file');
-                                        // Error deleting the file
-                                    }, function () {
-                                        // The file doesn't exist
+                                x.id = 'testVideo';
+
+                                if (x.canPlayType("video/mp4")) {
+                                    x.setAttribute("src", videoData);
+                                } else {
+                                    x.setAttribute("src", videoData);
+                                }
+
+                                x.setAttribute("width", "320");
+                                x.setAttribute("height", "240");
+                                x.setAttribute("controls", "controls");
+                                x.setAttribute("autoplay", "autoplay");
+                                x.setAttribute("playsinline", "playsinline");
+                                x.setAttribute("webkit-playsinline", "webkit-playsinline");
+                                document.getElementById('videoContent').appendChild(x);
+
+                                x.onended = function () {
+                                    alert("The video has ended.\n Video source file will be automatically deleted.");
+                                    document.getElementById('testVideo').style.display = 'none';
+                                    window.resolveLocalFileSystemURL(folderPath, function (dir) {
+                                        dir.getFile(fileName, { create: false }, function (fileEntry) {
+                                            fileEntry.remove(function (result) {
+                                                console.log('Video file deleted');
+                                                console.log(result);
+                                                // The file has been removed succesfully
+                                            }, function (error) {
+                                                console.log(error);
+                                                console.log('Can`t delete video file');
+                                                // Error deleting the file
+                                            }, function () {
+                                                // The file doesn't exist
+                                            });
+                                        });
                                     });
-                                });
-                            });
-                        };
+                                };
+                            }
 
+                            reader.readAsText(file);
+                        });
+
+                    }, function (fail) {
+                        console.log("FileSystem Error");
+                        console.dir(e);
                     });
+
+
+
+
+
                 },
                 function (error) {
                     console.log(error);
