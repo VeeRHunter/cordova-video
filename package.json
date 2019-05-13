@@ -11,6 +11,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "com-badrit-base64": "^0.2.0",
+        "compressjs": "^1.0.3",
         "cordova-android": "^7.0.0",
         "cordova-android-support-gradle-release": "^3.0.0",
         "cordova-browser": "^5.0.4",

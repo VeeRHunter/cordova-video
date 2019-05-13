@@ -16,6 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+var compressjs = require('compressjs');
+
 var app = {
     // Application Constructor
     initialize: function () {
@@ -41,6 +44,9 @@ var app = {
         var date = new Date();
         var startTime = date.getTime();
 
+        // var compressjs = require('compressjs');
+        console.log(compressjs);
+
         if (device.platform === 'Android') {
             var permissions = cordova.plugins.permissions;
             console.log(permissions);
@@ -53,57 +59,6 @@ var app = {
             permissions.requestPermissions([permissions.READ_EXTERNAL_STORAGE, permissions.WRITE_EXTERNAL_STORAGE],
                 function (result) {
                     console.log(result);
-
-                    // VideoPlayer.play(nativeFilePath);
-                    
-                    // var x = document.createElement("VIDEO");
-
-                    // x.id = 'testVideo';
-
-                    // if (x.canPlayType("video/mp4")) {
-                    //     x.setAttribute("src", nativeFilePath);
-                    // } else {
-                    //     x.setAttribute("src", nativeFilePath);
-                    // }
-
-                    // x.setAttribute("width", "320");
-                    // x.setAttribute("height", "240");
-                    // x.setAttribute("controls", "controls");
-                    // x.setAttribute("autoplay", "autoplay");
-                    // x.setAttribute("playsinline", "playsinline");
-                    // x.setAttribute("webkit-playsinline", "webkit-playsinline");
-                    // document.getElementById('videoContent').appendChild(x);
-                    // x.onplay = function () {
-                    //     SpinnerPlugin.activityStop();
-                    // }
-
-                    window.plugins.Base64.encodeFile(nativeFilePath, function (base64) {
-                        console.log(base64);
-                        console.log('file base64 encoding: ');
-
-                        videoData = 'data:video/mp4;base64,' + base64.split('base64,')[1];
-
-                        // var x = document.createElement("VIDEO");
-
-                        // x.id = 'testVideo';
-
-                        // if (x.canPlayType("video/mp4")) {
-                        //     x.setAttribute("src", nativeFilePath);
-                        // } else {
-                        //     x.setAttribute("src", nativeFilePath);
-                        // }
-
-                        // x.setAttribute("width", "320");
-                        // x.setAttribute("height", "240");
-                        // x.setAttribute("controls", "controls");
-                        // x.setAttribute("autoplay", "autoplay");
-                        // x.setAttribute("playsinline", "playsinline");
-                        // x.setAttribute("webkit-playsinline", "webkit-playsinline");
-                        // document.getElementById('videoContent').appendChild(x);
-                        // x.onplay = function () {
-                        //     SpinnerPlugin.activityStop();
-                        // }
-                    });
 
 
 
@@ -124,6 +79,7 @@ var app = {
                     //             // videoData = 'data:video/mp4;base64,' + videoData;
 
                     //             videoData = 'data:video/mp4;base64,' + this.result.substr(key.length);
+                    //             console.log(videoData);
 
                     //             var x = document.createElement("VIDEO");
 
