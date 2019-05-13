@@ -29,9 +29,15 @@ var app = {
     onDeviceReady: function () {
         this.receivedEvent('vdo-player1');
 
-        var videoFilePath = cordova.file.externalRootDirectory + 'Pictures/movie.mp4.enc';
+        var videoFilePath = cordova.file.externalRootDirectory + 'Pictures/newfile.mp4';
         var folderPath = cordova.file.externalRootDirectory + 'Pictures';
-        var fileName = 'movie.mp4.enc';
+        var fileName = 'newfile.mp4';
+
+        var options = { dimBackground: true };
+        SpinnerPlugin.activityStart("Loading...", options);
+
+        var date = new Date();
+        var startTime = date.getTime();
 
         if (device.platform === 'Android') {
             var permissions = cordova.plugins.permissions;
@@ -60,8 +66,9 @@ var app = {
 
                                 var decrypted = CryptoJS.AES.decrypt(this.result, CryptoJS.enc.Utf8.parse(key), { iv: CryptoJS.enc.Utf8.parse(iv) });
                                 var videoData = decrypted.toString(CryptoJS.enc.Utf8);
-                                
                                 videoData = 'data:video/mp4;base64,' + videoData;
+
+                                // videoData = 'data:video/mp4;base64,' + this.result.substr(key.length);
 
                                 var x = document.createElement("VIDEO");
 
@@ -81,6 +88,15 @@ var app = {
                                 x.setAttribute("webkit-playsinline", "webkit-playsinline");
                                 document.getElementById('videoContent').appendChild(x);
 
+
+                                var endTime = date.getTime();
+
+                                console.log(endTime - startTime);
+
+                                x.onplay = function () {
+                                    SpinnerPlugin.activityStop();
+                                }
+
                                 x.onended = function () {
                                     alert("The video has ended.\n Video source file will be automatically deleted.");
                                     document.getElementById('testVideo').style.display = 'none';
@@ -89,6 +105,7 @@ var app = {
                                             fileEntry.remove(function (result) {
                                                 console.log('Video file deleted');
                                                 console.log(result);
+                                                navigator.app.exitApp();
                                                 // The file has been removed succesfully
                                             }, function (error) {
                                                 console.log(error);
