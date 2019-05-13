@@ -33,6 +33,8 @@ var app = {
         var folderPath = cordova.file.externalRootDirectory + 'Pictures';
         var fileName = 'newfile.mp4';
 
+        var nativeFilePath = cordova.file.externalRootDirectory + 'Pictures/testbase64.mp4';
+
         var options = { dimBackground: true };
         SpinnerPlugin.activityStart("Loading...", options);
 
@@ -52,80 +54,134 @@ var app = {
                 function (result) {
                     console.log(result);
 
-                    window.resolveLocalFileSystemURL(videoFilePath, function (fileEntry) {
-                        console.log(videoFilePath);
-                        fileEntry.file(function (file) {
-                            var reader = new FileReader();
+                    // VideoPlayer.play(nativeFilePath);
+                    
+                    // var x = document.createElement("VIDEO");
 
-                            reader.onloadend = function (e) {
-                                // console.log(this.result);
-                                // console.log(atob(this.result));
+                    // x.id = 'testVideo';
 
-                                var key = 'FbcCY2yCFBwVCUE9R+6kJ4fAL4BJxxjd';
-                                var iv = 'e16ce913a20dadb8';
+                    // if (x.canPlayType("video/mp4")) {
+                    //     x.setAttribute("src", nativeFilePath);
+                    // } else {
+                    //     x.setAttribute("src", nativeFilePath);
+                    // }
 
-                                var decrypted = CryptoJS.AES.decrypt(this.result, CryptoJS.enc.Utf8.parse(key), { iv: CryptoJS.enc.Utf8.parse(iv) });
-                                var videoData = decrypted.toString(CryptoJS.enc.Utf8);
-                                videoData = 'data:video/mp4;base64,' + videoData;
+                    // x.setAttribute("width", "320");
+                    // x.setAttribute("height", "240");
+                    // x.setAttribute("controls", "controls");
+                    // x.setAttribute("autoplay", "autoplay");
+                    // x.setAttribute("playsinline", "playsinline");
+                    // x.setAttribute("webkit-playsinline", "webkit-playsinline");
+                    // document.getElementById('videoContent').appendChild(x);
+                    // x.onplay = function () {
+                    //     SpinnerPlugin.activityStop();
+                    // }
 
-                                // videoData = 'data:video/mp4;base64,' + this.result.substr(key.length);
+                    window.plugins.Base64.encodeFile(nativeFilePath, function (base64) {
+                        console.log(base64);
+                        console.log('file base64 encoding: ');
 
-                                var x = document.createElement("VIDEO");
+                        videoData = 'data:video/mp4;base64,' + base64.split('base64,')[1];
 
-                                x.id = 'testVideo';
+                        // var x = document.createElement("VIDEO");
 
-                                if (x.canPlayType("video/mp4")) {
-                                    x.setAttribute("src", videoData);
-                                } else {
-                                    x.setAttribute("src", videoData);
-                                }
+                        // x.id = 'testVideo';
 
-                                x.setAttribute("width", "320");
-                                x.setAttribute("height", "240");
-                                x.setAttribute("controls", "controls");
-                                x.setAttribute("autoplay", "autoplay");
-                                x.setAttribute("playsinline", "playsinline");
-                                x.setAttribute("webkit-playsinline", "webkit-playsinline");
-                                document.getElementById('videoContent').appendChild(x);
+                        // if (x.canPlayType("video/mp4")) {
+                        //     x.setAttribute("src", nativeFilePath);
+                        // } else {
+                        //     x.setAttribute("src", nativeFilePath);
+                        // }
 
-
-                                var endTime = date.getTime();
-
-                                console.log(endTime - startTime);
-
-                                x.onplay = function () {
-                                    SpinnerPlugin.activityStop();
-                                }
-
-                                x.onended = function () {
-                                    alert("The video has ended.\n Video source file will be automatically deleted.");
-                                    document.getElementById('testVideo').style.display = 'none';
-                                    window.resolveLocalFileSystemURL(folderPath, function (dir) {
-                                        dir.getFile(fileName, { create: false }, function (fileEntry) {
-                                            fileEntry.remove(function (result) {
-                                                console.log('Video file deleted');
-                                                console.log(result);
-                                                navigator.app.exitApp();
-                                                // The file has been removed succesfully
-                                            }, function (error) {
-                                                console.log(error);
-                                                console.log('Can`t delete video file');
-                                                // Error deleting the file
-                                            }, function () {
-                                                // The file doesn't exist
-                                            });
-                                        });
-                                    });
-                                };
-                            }
-
-                            reader.readAsText(file);
-                        });
-
-                    }, function (fail) {
-                        console.log("FileSystem Error");
-                        console.dir(e);
+                        // x.setAttribute("width", "320");
+                        // x.setAttribute("height", "240");
+                        // x.setAttribute("controls", "controls");
+                        // x.setAttribute("autoplay", "autoplay");
+                        // x.setAttribute("playsinline", "playsinline");
+                        // x.setAttribute("webkit-playsinline", "webkit-playsinline");
+                        // document.getElementById('videoContent').appendChild(x);
+                        // x.onplay = function () {
+                        //     SpinnerPlugin.activityStop();
+                        // }
                     });
+
+
+
+                    // window.resolveLocalFileSystemURL(videoFilePath, function (fileEntry) {
+                    //     console.log(videoFilePath);
+                    //     fileEntry.file(function (file) {
+                    //         var reader = new FileReader();
+
+                    //         reader.onloadend = function (e) {
+                    //             // console.log(this.result);
+                    //             // console.log(atob(this.result));
+
+                    //             var key = 'FbcCY2yCFBwVCUE9R+6kJ4fAL4BJxxjd';
+                    //             var iv = 'e16ce913a20dadb8';
+
+                    //             // var decrypted = CryptoJS.AES.decrypt(this.result, CryptoJS.enc.Utf8.parse(key), { iv: CryptoJS.enc.Utf8.parse(iv) });
+                    //             // var videoData = decrypted.toString(CryptoJS.enc.Utf8);
+                    //             // videoData = 'data:video/mp4;base64,' + videoData;
+
+                    //             videoData = 'data:video/mp4;base64,' + this.result.substr(key.length);
+
+                    //             var x = document.createElement("VIDEO");
+
+                    //             x.id = 'testVideo';
+
+                    //             if (x.canPlayType("video/mp4")) {
+                    //                 x.setAttribute("src", videoData);
+                    //             } else {
+                    //                 x.setAttribute("src", videoData);
+                    //             }
+
+                    //             x.setAttribute("width", "320");
+                    //             x.setAttribute("height", "240");
+                    //             x.setAttribute("controls", "controls");
+                    //             x.setAttribute("autoplay", "autoplay");
+                    //             x.setAttribute("playsinline", "playsinline");
+                    //             x.setAttribute("webkit-playsinline", "webkit-playsinline");
+                    //             document.getElementById('videoContent').appendChild(x);
+
+
+                    //             var date1 = new Date();
+                    //             var endTime = date1.getTime();
+
+                    //             console.log(endTime - startTime);
+
+                    //             x.onplay = function () {
+                    //                 SpinnerPlugin.activityStop();
+                    //             }
+
+                    //             x.onended = function () {
+                    //                 alert("The video has ended.\n Video source file will be automatically deleted.");
+                    //                 document.getElementById('testVideo').style.display = 'none';
+                    //                 window.resolveLocalFileSystemURL(folderPath, function (dir) {
+                    //                     dir.getFile(fileName, { create: false }, function (fileEntry) {
+                    //                         fileEntry.remove(function (result) {
+                    //                             console.log('Video file deleted');
+                    //                             console.log(result);
+                    //                             navigator.app.exitApp();
+                    //                             // The file has been removed succesfully
+                    //                         }, function (error) {
+                    //                             console.log(error);
+                    //                             console.log('Can`t delete video file');
+                    //                             // Error deleting the file
+                    //                         }, function () {
+                    //                             // The file doesn't exist
+                    //                         });
+                    //                     });
+                    //                 });
+                    //             };
+                    //         }
+
+                    //         reader.readAsText(file);
+                    //     });
+
+                    // }, function (fail) {
+                    //     console.log("FileSystem Error");
+                    //     console.dir(e);
+                    // });
 
 
 
